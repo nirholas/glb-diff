@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: "@three-ws/glb-diff"
+abstract: "Structural diff for glTF/GLB. Tells you what actually changed between two 3D models: geometry, materials, textures, skeletons, animations, with git-style rename and move detection. Isomorphic library plus a CI-ready CLI."
+version: 0.1.0
+license: Apache-2.0
+repository-code: "https://github.com/nirholas/glb-diff"
+url: "https://three.ws"
+authors:
+  - name: three.ws
+    website: "https://three.ws"

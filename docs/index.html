@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>@three-ws/glb-diff: Structural diff for glTF/GLB</title>
+<meta name="description" content="Structural diff for glTF/GLB. Tells you what actually changed between two 3D models: geometry, materials, textures, skeletons, animations, with git-style rename and move detection. Isomorphic library plus a CI-ready CLI.">
+<link rel="canonical" href="https://nirholas.github.io/glb-diff/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="three.ws">
+<meta property="og:title" content="@three-ws/glb-diff">
+<meta property="og:description" content="Structural diff for glTF/GLB. Tells you what actually changed between two 3D models: geometry, materials, textures, skeletons, animations, with git-style rename and move detection. Isomorphic library plus a CI-ready CLI.">
+<meta property="og:url" content="https://nirholas.github.io/glb-diff/">
+<meta property="og:image" content="https://nirholas.github.io/glb-diff/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="@three-ws/glb-diff">
+<meta name="twitter:description" content="Structural diff for glTF/GLB. Tells you what actually changed between two 3D models: geometry, materials, textures, skeletons, animations, with git-style rename and move detection. Isomorphic library plus a CI-ready CLI.">
+<meta name="twitter:image" content="https://nirholas.github.io/glb-diff/og.png">
+<meta name="keywords" content="gltf, glb, diff, 3d, gltf-transform, version-control, regression, ci, rename-detection, three.ws, ai-agents">
+<link rel="alternate" type="text/plain" href="llms.txt" title="llms.txt">
+<link rel="icon" href="https://three.ws/three-ws-mcp-icon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"@three-ws/glb-diff","description":"Structural diff for glTF/GLB. Tells you what actually changed between two 3D models: geometry, materials, textures, skeletons, animations, with git-style rename and move detection. Isomorphic library plus a CI-ready CLI.","codeRepository":"https://github.com/nirholas/glb-diff","programmingLanguage":"JavaScript","license":"https://spdx.org/licenses/Apache-2.0.html","version":"0.1.0","url":"https://nirholas.github.io/glb-diff/","author":{"@type":"Organization","name":"three.ws","url":"https://three.ws"},"keywords":"gltf, glb, diff, 3d, gltf-transform, version-control, regression, ci, rename-detection, three.ws, ai-agents"}</script>
+<style>:root{--bg:#fff;--fg:#111418;--mut:#586069;--line:#e3e6ea;--acc:#2563eb;--code:#f4f6f8;--card:#fafbfc}
+@media(prefers-color-scheme:dark){:root{--bg:#0b0d10;--fg:#e8eaed;--mut:#9aa3ad;--line:#232830;--acc:#6ea0ff;--code:#14181d;--card:#10141a}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}a:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:4px}
+header.bar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-weight:700;text-decoration:none;color:var(--fg)}
+.bar nav{margin-left:auto;display:flex;gap:16px;font-size:14px}
+.bar nav a{color:var(--mut);text-decoration:none;transition:color .15s}.bar nav a:hover{color:var(--fg)}
+.hero{max-width:1100px;margin:0 auto;padding:48px 16px 24px}
+.hero h1{font-size:clamp(28px,5vw,44px);line-height:1.15;margin:0 0 12px;letter-spacing:-.02em}
+.hero p{color:var(--mut);max-width:70ch;font-size:18px;margin:0 0 24px}
+.install{display:flex;align-items:center;gap:8px;max-width:620px;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:6px 6px 6px 14px}
+.install code{flex:1;overflow-x:auto;white-space:nowrap;font:14px ui-monospace,SFMono-Regular,Menlo,monospace}
+.install button{border:0;background:var(--acc);color:#fff;border-radius:7px;padding:8px 14px;font:600 13px system-ui;cursor:pointer;transition:transform .12s,opacity .12s}
+.install button:hover{opacity:.9}.install button:active{transform:scale(.96)}
+.cta{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.cta a{padding:9px 16px;border:1px solid var(--line);border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;color:var(--fg);transition:border-color .15s,transform .15s}
+.cta a:hover{border-color:var(--acc);transform:translateY(-1px)}.cta a.pri{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.layout{max-width:1100px;margin:0 auto;padding:8px 16px 64px;display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:40px}
+@media(max-width:860px){.layout{grid-template-columns:minmax(0,1fr)}.toc{display:none}}
+.toc{position:sticky;top:76px;align-self:start;font-size:14px;border-left:1px solid var(--line);padding-left:16px}
+.toc p{margin:0 0 8px;font-weight:700;color:var(--mut);text-transform:uppercase;font-size:12px;letter-spacing:.06em}
+.toc ul{list-style:none;margin:0;padding:0}.toc li{margin:6px 0}.toc a{color:var(--mut);text-decoration:none}.toc a:hover{color:var(--fg)}
+main{min-width:0;overflow-wrap:anywhere}main pre code{overflow-wrap:normal}main img{max-width:100%;height:auto}
+main h2{margin-top:2.2em;padding-bottom:.3em;border-bottom:1px solid var(--line)}
+.anchor{margin-left:-1.1em;padding-right:.4em;text-decoration:none;opacity:0;color:var(--mut)}h2:hover .anchor,h3:hover .anchor,h4:hover .anchor{opacity:1}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:14px;line-height:1.5}
+code{font:0.9em ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--code);padding:.15em .35em;border-radius:5px}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%}th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}th{background:var(--card)}
+blockquote{margin:1em 0;padding:.2em 1em;border-left:4px solid var(--line);color:var(--mut)}
+footer{border-top:1px solid var(--line);color:var(--mut);font-size:14px}
+.foot-in{max-width:1100px;margin:0 auto;padding:24px 16px;display:flex;gap:16px;flex-wrap:wrap}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}</style>
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+<a class="brand" href="https://nirholas.github.io/glb-diff/">@three-ws/glb-diff</a>
+<nav aria-label="Project links"><a href="https://github.com/nirholas/glb-diff">GitHub</a><a href="https://www.npmjs.com/package/@three-ws/glb-diff">npm</a><a href="llms.txt">llms.txt</a><a href="https://three.ws">three.ws</a></nav>
+</div></header>
+<section class="hero">
+<h1>@three-ws/glb-diff</h1>
+<p>Structural diff for glTF/GLB. Tells you what actually changed between two 3D models: geometry, materials, textures, skeletons, animations, with git-style rename and move detection. Isomorphic library plus a CI-ready CLI.</p>
+<div class="install" role="group" aria-label="Install command"><code>npx -y @three-ws/glb-diff</code><button type="button" data-copy="npx -y @three-ws/glb-diff">Copy</button></div>
+<div class="cta"><a class="pri" href="https://github.com/nirholas/glb-diff">View on GitHub</a><a href="https://github.com/nirholas/glb-diff/stargazers">Star the repo</a></div>
+</section>
+<div class="layout">
+<main id="content"><h1>@three-ws/glb-diff</h1>
+<p><strong>Structural diff for glTF/GLB.</strong> Tells you what actually changed between two 3D
+models: geometry, materials, textures, skeletons, and animations, with git-style
+rename and move detection.</p>
+<p>A binary diff of two GLB files tells you the bytes differ, which you already
+knew. This tells you the thing you need to know before you ship: whether a
+consumer of that model is about to break.</p>
+<h2 id="install"><a class="anchor" href="#install" aria-label="Link to this section">#</a>Install</h2>
+<pre><code class="language-bash">npm install @three-ws/glb-diff
+</code></pre>
+<h2 id="library"><a class="anchor" href="#library" aria-label="Link to this section">#</a>Library</h2>
+<pre><code class="language-js">import { readFile } from &#39;node:fs/promises&#39;;
+import { diffModels, formatText } from &#39;@three-ws/glb-diff&#39;;
+
+const before = await readFile(&#39;avatar.v1.glb&#39;);
+const after = await readFile(&#39;avatar.v2.glb&#39;);
+
+const changes = await diffModels(before, after, { nameA: &#39;v1&#39;, nameB: &#39;v2&#39; });
+console.log(formatText(changes));
+
+if (changes.severity === &#39;breaking&#39;) process.exit(1);
+</code></pre>
+<p>Isomorphic: it takes bytes, so the same call works in Node, in a worker, in a
+serverless handler, or in a browser.</p>
+<h2 id="cli"><a class="anchor" href="#cli" aria-label="Link to this section">#</a>CLI</h2>
+<pre><code class="language-bash">glb-diff before.glb after.glb
+glb-diff before.glb https://example.com/after.glb --markdown
+glb-diff base.glb candidate.glb --fail-on major
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--json</code></td>
+<td>The full change set as JSON</td>
+</tr>
+<tr>
+<td><code>--markdown</code></td>
+<td>A Markdown report, sized for a pull-request comment</td>
+</tr>
+<tr>
+<td><code>--fail-on &lt;level&gt;</code></td>
+<td>Exit 1 once severity reaches this level</td>
+</tr>
+<tr>
+<td><code>--verbose</code></td>
+<td>Include unchanged totals in the table</td>
+</tr>
+</tbody></table>
+<p>Exit codes are the contract a CI job depends on, so they are deliberate:</p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0</code></td>
+<td>The diff ran and stayed below <code>--fail-on</code></td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>The diff ran and the severity reached <code>--fail-on</code></td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>The tool could not run: bad arguments, unreadable input, unparseable model</td>
+</tr>
+</tbody></table>
+<p>A tool that returns <code>1</code> for both &quot;your model regressed&quot; and &quot;I could not open the
+file&quot; is useless in a pipeline, which is why <code>2</code> exists.</p>
+<h2 id="severity"><a class="anchor" href="#severity" aria-label="Link to this section">#</a>Severity</h2>
+<p>Every change set carries one severity, the worst of everything it found:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>none</code></td>
+<td>The two models are structurally identical.</td>
+</tr>
+<tr>
+<td><code>cosmetic</code></td>
+<td>Only metadata changed. Nothing a renderer or a clip can observe.</td>
+</tr>
+<tr>
+<td><code>minor</code></td>
+<td>Appearance changed. The model still loads, animates, and keeps its shape.</td>
+</tr>
+<tr>
+<td><code>major</code></td>
+<td>Geometry or hierarchy changed. Anything positioned against this model should be re-checked.</td>
+</tr>
+<tr>
+<td><code>breaking</code></td>
+<td>Something a consumer references by name is gone. Clips, attachments, or materials bound to it will fail.</td>
+</tr>
+</tbody></table>
+<p>That ladder is what makes <code>--fail-on</code> useful. A texture swap should not fail a
+build; a deleted bone that every animation clip targets should.</p>
+<h2 id="api"><a class="anchor" href="#api" aria-label="Link to this section">#</a>API</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>diffModels(bytesA, bytesB, opts?)</code></td>
+<td>Bytes in, change set out. The one call most callers need.</td>
+</tr>
+<tr>
+<td><code>describeModel(bytes)</code> / <code>describeDocument(doc)</code></td>
+<td>The structural description a diff is computed from.</td>
+</tr>
+<tr>
+<td><code>diffDescriptions(a, b)</code></td>
+<td>Diff two descriptions you already have, skipping the parse.</td>
+</tr>
+<tr>
+<td><code>formatText(changes)</code> / <code>formatMarkdown(changes)</code></td>
+<td>Render a change set for a terminal or a PR comment.</td>
+</tr>
+<tr>
+<td><code>readDocument(bytes)</code> / <code>isGLB(bytes)</code></td>
+<td>Parse helpers over <code>@gltf-transform/core</code>.</td>
+</tr>
+<tr>
+<td><code>SEVERITIES</code>, <code>SEVERITY_MEANING</code>, <code>atLeast()</code>, <code>maxSeverity()</code>, <code>severityRank()</code></td>
+<td>The severity ladder as data.</td>
+</tr>
+<tr>
+<td><code>matchEntries()</code>, <code>jaccard()</code>, <code>ratio()</code></td>
+<td>The similarity matcher behind rename and move detection.</td>
+</tr>
+</tbody></table>
+<p><code>DESCRIPTION_VERSION</code> and <code>CHANGESET_VERSION</code> are exported so a cache or a stored
+report can tell whether it was produced by a compatible version.</p>
+<h2 id="related"><a class="anchor" href="#related" aria-label="Link to this section">#</a>Related</h2>
+<ul>
+<li><a href="https://github.com/nirholas/glb-diff/blob/main/./render"><code>@three-ws/render</code></a>: rasterize a GLB to PNG with no GPU, for a
+visual check alongside the structural one.</li>
+<li><a href="https://github.com/nirholas/glb-diff/blob/main/./../STRUCTURE.md"><code>STRUCTURE.md</code></a>: where every three.ws surface lives.</li>
+</ul>
+<h2 id="license"><a class="anchor" href="#license" aria-label="Link to this section">#</a>License</h2>
+<p>Apache-2.0</p>
+</main>
+<nav class="toc" aria-label="On this page"><p>On this page</p><ul><li><a href="#install">Install</a></li><li><a href="#library">Library</a></li><li><a href="#cli">CLI</a></li><li><a href="#severity">Severity</a></li><li><a href="#api">API</a></li><li><a href="#related">Related</a></li><li><a href="#license">License</a></li></ul></nav>
+</div>
+<footer><div class="foot-in"><span>Apache-2.0 licensed</span><a href="https://github.com/nirholas/glb-diff/issues">Issues</a><a href="https://github.com/nirholas/glb-diff/blob/main/CONTRIBUTING.md">Contributing</a><a href="https://github.com/nirholas/glb-diff/security/policy">Security</a><a href="https://three.ws">Part of three.ws</a></div></footer>
+<script>document.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
+var t=b.getAttribute('data-copy');var done=function(){var o=b.textContent;b.textContent='Copied';setTimeout(function(){b.textContent=o},1400)};
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){})}
+else{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(e){}a.remove()}})});</script>
+</body>
+</html>
